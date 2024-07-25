@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import {PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
-import nodemailer from "nodemailer";
-
 
 const prisma = new PrismaClient();
 const user_fingerprint_salt = 1000000007;
@@ -211,7 +209,6 @@ export const createComment = async (req: Request, res: Response) => {
     token = authHeader.split(" ")[1];
   } 
 
-
   const { userId, error } = decodeUserId(token);
 
   try {
@@ -233,7 +230,6 @@ export const createComment = async (req: Request, res: Response) => {
       post = await prisma.post.findUnique({
         where: { id: postId },
         include: {
-          created_by:true,
           comments: {
             orderBy: {
               created_at: "desc"
@@ -245,7 +241,6 @@ export const createComment = async (req: Request, res: Response) => {
       post = await prisma.post.findUnique({
         where: { id: postId },
         include: {
-          created_by:true,
           comments: {
             where: {
               user_fingerprint: user
@@ -260,26 +255,6 @@ export const createComment = async (req: Request, res: Response) => {
 
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
-    }
-
-    // Send email to the post author
-    if (post.created_by && post.created_by.email) {
-      const transporter = nodemailer.createTransport({
-        service: 'Gmail', 
-        auth: {
-          user: process.env.SENDER_EMAIL ?? "", 
-          pass: process.env.SENDER_PASS ?? ""
-        }
-      });
-
-      // Send email
-      transporter.sendMail({
-        from: process.env.SENDER_EMAIL ?? "", 
-        to: post.created_by.email, 
-        subject: 'New Comment on Your Post', 
-        text: `A new comment has been added to your post. Content: "${content}"`, 
-        html: `<p>A new comment has been added to your post. Content: "${content} Post title:${post.title}"</p>` 
-      });
     }
 
     const serializedPost = {
@@ -317,9 +292,6 @@ export const validateToken = async (req: Request, res: Response) => {
 
 const decodeUserId = (jwtToken: string): { userId: string; error: boolean } => {
   try {
-    if (jwtToken.length === 0){
-      return { userId:"", error:true}
-    }
     const jwtkey = process.env.JWT_KEY ?? "";
     const decoded = jwt.verify(jwtToken, jwtkey) as {
       userId: string;
