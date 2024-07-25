@@ -11,7 +11,9 @@ const app = express();
 const prisma = new PrismaClient();
 
 app.use(bodyParser.json({}));
-app.use(cors());
+app.use(cors({
+  origin: "https://anonymous-feedback-frontend.vercel.app"
+}));
 
 app.post("/google/webhook", googleWebhook);
 app.post("/post/", createPost);
