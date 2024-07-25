@@ -267,12 +267,12 @@ export const createComment = async (req: Request, res: Response) => {
         service: 'Gmail', 
         auth: {
           user: process.env.SENDER_EMAIL ?? "", 
-          pass: process.env.SENDER_PASS
+          pass: process.env.SENDER_PASS ?? ""
         }
       });
 
       // Send email
-      await transporter.sendMail({
+      transporter.sendMail({
         from: process.env.SENDER_EMAIL ?? "", 
         to: post.created_by.email, 
         subject: 'New Comment on Your Post', 
