@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import { Post, PrismaClient } from "@prisma/client";
+import {PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import nodemailer from "nodemailer";
+
 
 const prisma = new PrismaClient();
 const user_fingerprint_salt = 1000000007;
@@ -208,9 +210,6 @@ export const createComment = async (req: Request, res: Response) => {
   if (authHeader && authHeader.startsWith("Bearer ")) {
     token = authHeader.split(" ")[1];
   } 
-  // else {
-  //   return res.status(401).json({ message: "Unauthorized: No token provided" });
-  // }
 
   const { userId, error } = decodeUserId(token);
 
@@ -233,6 +232,7 @@ export const createComment = async (req: Request, res: Response) => {
       post = await prisma.post.findUnique({
         where: { id: postId },
         include: {
+          created_by:true,
           comments: {
             orderBy: {
               created_at: "desc"
@@ -244,6 +244,7 @@ export const createComment = async (req: Request, res: Response) => {
       post = await prisma.post.findUnique({
         where: { id: postId },
         include: {
+          created_by:true,
           comments: {
             where: {
               user_fingerprint: user
@@ -258,6 +259,26 @@ export const createComment = async (req: Request, res: Response) => {
 
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
+    }
+
+    // Send email to the post author
+    if (post.created_by && post.created_by.email) {
+      const transporter = nodemailer.createTransport({
+        service: 'Gmail', 
+        auth: {
+          user: process.env.SENDER_EMAIL ?? "", 
+          pass: process.env.SENDER_PASS
+        }
+      });
+
+      // Send email
+      await transporter.sendMail({
+        from: process.env.SENDER_EMAIL ?? "", 
+        to: post.created_by.email, 
+        subject: 'New Comment on Your Post', 
+        text: `A new comment has been added to your post. Content: "${content}"`, 
+        html: `<p>A new comment has been added to your post. Content: "${content}"</p>` 
+      });
     }
 
     const serializedPost = {

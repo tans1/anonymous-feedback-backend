@@ -8,7 +8,7 @@
     "build": "npx tsc",
     "dev": "nodemon index.ts",
     "start": "node index.js",
-     "postinstall": "prisma generate"
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "google-auth-library": "^9.11.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.14"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -27,6 +28,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.12",
+    "@types/nodemailer": "^6.4.15",
     "nodemon": "^3.1.4",
     "prisma": "^5.17.0",
     "ts-node": "^10.9.2",
