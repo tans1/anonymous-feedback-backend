@@ -211,6 +211,7 @@ export const createComment = async (req: Request, res: Response) => {
     token = authHeader.split(" ")[1];
   } 
 
+
   const { userId, error } = decodeUserId(token);
 
   try {
@@ -277,7 +278,7 @@ export const createComment = async (req: Request, res: Response) => {
         to: post.created_by.email, 
         subject: 'New Comment on Your Post', 
         text: `A new comment has been added to your post. Content: "${content}"`, 
-        html: `<p>A new comment has been added to your post. Content: "${content}"</p>` 
+        html: `<p>A new comment has been added to your post. Content: "${content} Post title:${post.title}"</p>` 
       });
     }
 
@@ -316,6 +317,9 @@ export const validateToken = async (req: Request, res: Response) => {
 
 const decodeUserId = (jwtToken: string): { userId: string; error: boolean } => {
   try {
+    if (jwtToken.length === 0){
+      return { userId:"", error:true}
+    }
     const jwtkey = process.env.JWT_KEY ?? "";
     const decoded = jwt.verify(jwtToken, jwtkey) as {
       userId: string;
