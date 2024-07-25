@@ -207,9 +207,10 @@ export const createComment = async (req: Request, res: Response) => {
 
   if (authHeader && authHeader.startsWith("Bearer ")) {
     token = authHeader.split(" ")[1];
-  } else {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
-  }
+  } 
+  // else {
+  //   return res.status(401).json({ message: "Unauthorized: No token provided" });
+  // }
 
   const { userId, error } = decodeUserId(token);
 
