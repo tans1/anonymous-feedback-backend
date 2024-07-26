@@ -14,7 +14,7 @@ const app = express();
 
 app.use(bodyParser.json({}));
 app.use(cors({
-  origin: "https://anonymous-feedback-frontend.vercel.app"
+  origin: "https://anonfeedback.vercel.app"
 }));
 
 // app.use(cors());
