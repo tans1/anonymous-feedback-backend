@@ -1,36 +1,47 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "index.ts",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "api/**/*.ts",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "dir/**/*.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "/api/api.ts"
-      },
-      {
-        "src": "/dir/api/(.*)",
-        "dest": "/dir/api/api.js"
-      },
-      {
-        "src": "/dir/(.*)",
-        "dest": "/dir/index.js"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/index.ts"
-      }
-    ]
-  }
-  
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/**/*.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dir/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/comment",
+      "dest": "/api/comment.ts"
+    },
+    {
+      "src": "/api/config",
+      "dest": "/api/config.ts"
+    },
+    {
+      "src": "/api/post",
+      "dest": "/api/post.ts"
+    },
+    {
+      "src": "/api/user",
+      "dest": "/api/user.ts"
+    },
+    {
+      "src": "/dir/api/(.*)",
+      "dest": "/dir/api/api.js"
+    },
+    {
+      "src": "/dir/(.*)",
+      "dest": "/dir/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.ts"
+    }
+  ]
+}

@@ -1,14 +1,16 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { googleWebhook, createPost, getPostById, createComment,getUserPostsWithCommentCount,validateToken } from "./api/api";
 import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
+import { googleWebhook, validateToken } from "./api/user";
+import { createPost, getPostById, getUserPostsWithCommentCount } from "./api/post";
+import { createComment } from "./api/comment";
+import {prisma} from "./api/config";
 
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
+
 
 app.use(bodyParser.json({}));
 app.use(cors({
